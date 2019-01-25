@@ -8,10 +8,10 @@
 import UIKit
 
 protocol GraphDataProvider:class {
-    func position(forColumn column: Int) -> CGPoint
-    func totalDataPoints() -> Int
+  func position(forColumn column: Int) -> CGPoint
+  func totalDataPoints() -> Int
 }
 
 protocol InteractionDataProvider:class {
-    func position(nearest point: CGPoint) -> CGPoint
+  func position(nearest point: CGPoint) -> CGPoint
 }

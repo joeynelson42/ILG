@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol GraphViewInteractionDelegate:class {
-    func graphViewInteraction(userInputDidChange currentIndex: Int)
+  func graphViewInteraction(userInputDidChange currentIndex: Int)
 }
 
 public extension GraphViewInteractionDelegate {
-    func graphViewInteraction(userInputDidChange currentIndex: Int) {}
+  func graphViewInteraction(userInputDidChange currentIndex: Int) {}
 }
