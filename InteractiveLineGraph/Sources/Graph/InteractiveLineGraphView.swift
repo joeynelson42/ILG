@@ -39,6 +39,17 @@ open class InteractiveLineGraphView: UIView {
     }
   }
   
+  public var interactionDetailCard: UIView? {
+    get {
+      return nil
+    }
+    
+    set {
+      guard let _ = newValue else { return }
+      interactionView.set(newDetailCard: newValue!)
+    }
+  }
+  
   // MARK: Line Attributes
   public var lineColor: UIColor {
     get {
@@ -294,15 +305,9 @@ extension InteractiveLineGraphView: InteractionDataProvider {
       }
     }
     
-    dataProvider.updateDetailCardView(atIndex: index)
     interactionDelegate?.graphViewInteraction(userInputDidChange: index)
     
     return nearest
-  }
-
-  func detailCardView() -> UIView? {
-    guard let _ = dataProvider else { return nil }
-    return dataProvider.detailCardView()
   }
   
 }

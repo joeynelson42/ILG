@@ -50,14 +50,6 @@ class ExampleViewController: UIViewController {
 }
 
 extension ExampleViewController: InteractiveLineGraphDataProvider {
-  func detailCardView() -> UIView? {
-    return baseView.graphDetailCard
-  }
-  
-  func updateDetailCardView(atIndex index: Int) {
-    baseView.graphDetailCard.textLabel.text = "Index #\(index)"
-  }
-  
   func dataPoints() -> [Double] {
     return points
   }
@@ -65,6 +57,6 @@ extension ExampleViewController: InteractiveLineGraphDataProvider {
 
 extension ExampleViewController: GraphViewInteractionDelegate {
   func graphViewInteraction(userInputDidChange currentIndex: Int) {
-    print("Index #\(index)")
+    baseView.graphDetailCard.textLabel.text = "Index #\(currentIndex)"
   }
 }

@@ -33,6 +33,7 @@ class ExampleView: UIView {
     graphView.dotsEnabled = false
     graphView.interactionHighlightColor = .darkGray
     graphView.interactionHighlightAlpha = 0.25
+    graphView.interactionDetailCard = graphDetailCard
   }
   
   /// Set AccessibilityIdentifiers for view/subviews

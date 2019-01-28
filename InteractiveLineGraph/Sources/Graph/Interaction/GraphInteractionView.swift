@@ -14,11 +14,7 @@ enum CardPlacement {
 class GraphInteractionView: UIView {
   
   // MARK: - Public Properties
-  weak var dataProvider: InteractionDataProvider! {
-    didSet {
-      dataProviderDidChange()
-    }
-  }
+  weak var dataProvider: InteractionDataProvider!
   
   var highlightColor: UIColor {
     get {
@@ -56,7 +52,7 @@ class GraphInteractionView: UIView {
   
   // MARK: - Subviews
   fileprivate let line = InteractionLineView()
-  fileprivate var card: UIView?
+  fileprivate var detailCard: UIView?
   
   // MARK: - Stored Constraints
   // (Store any constraints that might need to be changed or animated later)
@@ -103,38 +99,31 @@ class GraphInteractionView: UIView {
       ])
   }
   
-  @objc func dataProviderDidChange() {
-    configureCard()
-  }
-  
   /// Reconfigure card if it exists.
-  fileprivate func configureCard() {
-    if let card = card {
+  func set(newDetailCard: UIView) {
+    if let card = detailCard {
       card.removeFromSuperview()
     }
     
-    if let detailCard = dataProvider.detailCardView() {
-      self.card = detailCard
-      
+    self.detailCard = newDetailCard
       hide(animated: false)
       
-      addAutoLayoutSubview(card!)
+      addAutoLayoutSubview(detailCard!)
       
-      cardLeft = card!.leftAnchor.constraint(equalTo: line.rightAnchor, constant: 12)
-      cardRight = card!.rightAnchor.constraint(equalTo: line.leftAnchor, constant: -12)
+      cardLeft = detailCard!.leftAnchor.constraint(equalTo: line.rightAnchor, constant: 12)
+      cardRight = detailCard!.rightAnchor.constraint(equalTo: line.leftAnchor, constant: -12)
       
       NSLayoutConstraint.activate([
-        card!.topAnchor.constraint(equalTo: line.topAnchor, constant: 12),
+        detailCard!.topAnchor.constraint(equalTo: line.topAnchor, constant: 12),
         cardLeft
         ])
-    }
   }
   
   /// Fade out. Animation optional.
   private func hide(animated: Bool) {
     let block = {
       self.line.alpha = 0
-      self.card?.alpha = 0
+      self.detailCard?.alpha = 0
     }
     if animated {
       UIView.animate(withDuration: 0.12, animations: block)
@@ -147,7 +136,7 @@ class GraphInteractionView: UIView {
   private func show(animated: Bool) {
     let block = {
       self.line.alpha = 1
-      self.card?.alpha = 1
+      self.detailCard?.alpha = 1
     }
     if animated {
       UIView.animate(withDuration: 0.12, animations: block)
@@ -191,7 +180,7 @@ class GraphInteractionView: UIView {
   }
   
   private func updateCard() {
-    guard let _ = card else { return }
+    guard let _ = detailCard else { return }
     
     if let newPlacement = recommendedCardPlacement() {
       set(cardPlacement: newPlacement, animated: true)
@@ -203,7 +192,7 @@ class GraphInteractionView: UIView {
   ///
   /// - Returns: Recommended card placement if card is out of frame, otherwise nil.
   private func recommendedCardPlacement() -> CardPlacement? {
-    guard let card = card else { return nil }
+    guard let card = detailCard else { return nil }
     
     if frame.contains(card.frame) {
       return nil

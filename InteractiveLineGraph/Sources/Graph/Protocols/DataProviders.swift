@@ -9,10 +9,6 @@ import UIKit
 
 public protocol InteractiveLineGraphDataProvider:class {
   func dataPoints() -> [Double]
-  
-  func detailCardView() -> UIView?
-  
-  func updateDetailCardView(atIndex index: Int)
 }
 
 internal protocol LineGraphDataProvider:class {
@@ -22,5 +18,4 @@ internal protocol LineGraphDataProvider:class {
 
 internal protocol InteractionDataProvider:class {
   func position(nearest point: CGPoint) -> CGPoint
-  func detailCardView() -> UIView?
 }
