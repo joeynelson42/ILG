@@ -10,9 +10,9 @@ import UIKit
 open class InteractiveLineGraphView: UIView {
   
   // MARK: Data
-  weak public var dataProvider: InteractiveLineGraphDataProvider! {
+  var dataPoints = [Double]() {
     didSet {
-      self.dataProviderDidChange()
+      updateGraphPoints()
     }
   }
   
@@ -184,6 +184,7 @@ open class InteractiveLineGraphView: UIView {
     dotsLayer.dataProvider = self
     layer.addSublayer(dotsLayer)
     
+    interactionView.dataProvider = self
     addAutoLayoutSubview(interactionView)
     interactionView.fillSuperview()
   }
@@ -197,16 +198,9 @@ open class InteractiveLineGraphView: UIView {
     updateGraphFrame()
   }
   
-  @objc func dataProviderDidChange() {
-    interactionView.dataProvider = self
-    update(animated: false)
-  }
-  
   // MARK: - Public
-  public func update(animated: Bool) {
-    guard let _ = dataProvider else { return }
-    
-    updateGraphPoints()
+  public func update(withDataPoints dataPoints: [Double], animated: Bool) {
+    self.dataPoints = dataPoints
     
     graphLayer.updatePaths(animated: animated)
     
@@ -224,7 +218,7 @@ open class InteractiveLineGraphView: UIView {
 extension InteractiveLineGraphView {
   fileprivate func updateGraphPoints() {
     graphPoints.removeAll()
-    for (index,_) in dataProvider.dataPoints().enumerated() {
+    for (index,_) in dataPoints.enumerated() {
       graphPoints.append(CGPoint.init(x: columnXPoint(column: index), y: columnYPoint(column: index)))
     }
   }
@@ -251,20 +245,17 @@ extension InteractiveLineGraphView: LineGraphDataProvider {
   }
   
   func totalDataPoints() -> Int {
-    guard let _ = dataProvider else { return 0 }
-    return dataProvider.dataPoints().count
+    return dataPoints.count
   }
   
   fileprivate func columnYPoint(column: Int) -> CGFloat {
     let minY = frame.height - graphPadding.bottom
     
-    guard let _ = dataProvider else { return minY }
+    if dataPoints.isEmpty { return minY }
     
-    if dataProvider.dataPoints().isEmpty { return minY }
-    
-    let minValue = CGFloat(dataProvider.dataPoints().min() ?? 0)
-    let maxValue = CGFloat(dataProvider.dataPoints().max() ?? 0)
-    let dataPoint = CGFloat(dataProvider.dataPoints()[column])
+    let minValue = CGFloat(dataPoints.min() ?? 0)
+    let maxValue = CGFloat(dataPoints.max() ?? 0)
+    let dataPoint = CGFloat(dataPoints[column])
     
     if minValue + maxValue <= 0 || (maxValue - minValue == 0) {
       return minY
@@ -278,13 +269,11 @@ extension InteractiveLineGraphView: LineGraphDataProvider {
   }
   
   fileprivate func columnXPoint(column: Int) -> CGFloat {
-    guard let _ = dataProvider else { return 0 }
-    
-    if dataProvider.dataPoints().count <= 1 {
+    if dataPoints.count <= 1 {
       return 0
     }
     
-    let spacer = (bounds.width - (graphPadding.left + graphPadding.right)) / CGFloat((dataProvider.dataPoints().count - 1))
+    let spacer = (bounds.width - (graphPadding.left + graphPadding.right)) / CGFloat((dataPoints.count - 1))
     var x = CGFloat(column) * spacer
     x += graphPadding.left
     return x

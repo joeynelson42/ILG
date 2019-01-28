@@ -25,19 +25,18 @@ class ExampleViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    baseView.graphView.dataProvider = self
     baseView.graphView.interactionDelegate = self
     
     baseView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(handleTap)))
     
     baseView.layoutIfNeeded()
     points = generateRandomList()
-    baseView.graphView.update(animated: false)
+    baseView.graphView.update(withDataPoints: generateRandomList(), animated: true)
   }
   
   @objc func handleTap() {
     points = generateRandomList()
-    baseView.graphView.update(animated: true)
+    baseView.graphView.update(withDataPoints: generateRandomList(), animated: true)
   }
   
   fileprivate func generateRandomList() -> [Double] {
@@ -46,12 +45,6 @@ class ExampleViewController: UIViewController {
       list.append(Double.random(in: 0...50))
     }
     return list
-  }
-}
-
-extension ExampleViewController: InteractiveLineGraphDataProvider {
-  func dataPoints() -> [Double] {
-    return points
   }
 }
 

@@ -7,10 +7,6 @@
 
 import UIKit
 
-public protocol InteractiveLineGraphDataProvider:class {
-  func dataPoints() -> [Double]
-}
-
 internal protocol LineGraphDataProvider:class {
   func position(forColumn column: Int) -> CGPoint
   func totalDataPoints() -> Int
