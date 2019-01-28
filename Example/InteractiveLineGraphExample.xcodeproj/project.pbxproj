@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F106133F21FF6B50009CE30A /* ExampleDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F106133E21FF6B50009CE30A /* ExampleDetailCardView.swift */; };
 		F1E13C7021F8F9BC009FEB26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C6F21F8F9BC009FEB26 /* AppDelegate.swift */; };
 		F1E13C7821F8F9BC009FEB26 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C7721F8F9BC009FEB26 /* UIView+.swift */; };
 		F1E13C8221F8F9BD009FEB26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1E13C8121F8F9BD009FEB26 /* Assets.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F106133E21FF6B50009CE30A /* ExampleDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleDetailCardView.swift; sourceTree = "<group>"; };
 		F1E13C6B21F8F9BC009FEB26 /* InteractiveLineGraphExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InteractiveLineGraphExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1E13C6F21F8F9BC009FEB26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1E13C7721F8F9BC009FEB26 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			children = (
 				F1E13C8E21F8FA05009FEB26 /* ExampleViewController.swift */,
 				F1E13C8C21F8F9FB009FEB26 /* ExampleView.swift */,
+				F106133E21FF6B50009CE30A /* ExampleDetailCardView.swift */,
 				F1E13C6E21F8F9BC009FEB26 /* App Files */,
 				F1E13C7621F8F9BC009FEB26 /* Extensions */,
 			);
@@ -181,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1E13C7821F8F9BC009FEB26 /* UIView+.swift in Sources */,
+				F106133F21FF6B50009CE30A /* ExampleDetailCardView.swift in Sources */,
 				F1E13C8F21F8FA05009FEB26 /* ExampleViewController.swift in Sources */,
 				F1E13C7021F8F9BC009FEB26 /* AppDelegate.swift in Sources */,
 				F1E13C8D21F8F9FB009FEB26 /* ExampleView.swift in Sources */,

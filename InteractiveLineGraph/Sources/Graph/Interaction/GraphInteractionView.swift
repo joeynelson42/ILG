@@ -7,10 +7,18 @@
 
 import UIKit
 
+enum CardPlacement {
+  case right, left
+}
+
 class GraphInteractionView: UIView {
   
-  // MARK: - Properties
-  weak var dataProvider: InteractionDataProvider!
+  // MARK: - Public Properties
+  weak var dataProvider: InteractionDataProvider! {
+    didSet {
+      dataProviderDidChange()
+    }
+  }
   
   var highlightColor: UIColor {
     get {
@@ -32,21 +40,36 @@ class GraphInteractionView: UIView {
     }
   }
   
+  // MARK: - Private Properties
   fileprivate var pan: UIPanGestureRecognizer!
   fileprivate var impactGenerator = UIImpactFeedbackGenerator.init(style: .light)
   fileprivate var lastPosition: CGPoint?
   
+  fileprivate var currentCardPlacement: CardPlacement {
+    guard let _ = cardRight, let _ = cardLeft else { return .right }
+    if cardRight.isActive {
+      return .left
+    } else {
+      return .right
+    }
+  }
+  
   // MARK: - Subviews
   fileprivate let line = InteractionLineView()
+  fileprivate var card: UIView?
   
   // MARK: - Stored Constraints
   // (Store any constraints that might need to be changed or animated later)
   fileprivate var lineLeft: NSLayoutConstraint!
   
+  fileprivate var cardLeft: NSLayoutConstraint!
+  fileprivate var cardRight: NSLayoutConstraint!
+  
   // MARK: - Initialization
   
   convenience init() {
     self.init(frame: .zero)
+    
     configureSubviews()
     configureTesting()
     configureLayout()
@@ -57,7 +80,7 @@ class GraphInteractionView: UIView {
   
   /// Set view/subviews appearances
   fileprivate func configureSubviews() {
-    line.alpha = 0
+    hide(animated: false)
   }
   
   /// Set AccessibilityIdentifiers for view/subviews
@@ -72,7 +95,6 @@ class GraphInteractionView: UIView {
     
     lineLeft = line.centerXAnchor.constraint(equalTo: leftAnchor)
     
-    // Activate NSLayoutAnchors within this closure
     NSLayoutConstraint.activate([
       line.topAnchor.constraint(equalTo: topAnchor),
       line.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -81,12 +103,69 @@ class GraphInteractionView: UIView {
       ])
   }
   
+  @objc func dataProviderDidChange() {
+    configureCard()
+  }
+  
+  /// Reconfigure card if it exists.
+  fileprivate func configureCard() {
+    if let card = card {
+      card.removeFromSuperview()
+    }
+    
+    if let detailCard = dataProvider.detailCardView() {
+      self.card = detailCard
+      
+      hide(animated: false)
+      
+      addAutoLayoutSubview(card!)
+      
+      cardLeft = card!.leftAnchor.constraint(equalTo: line.rightAnchor, constant: 12)
+      cardRight = card!.rightAnchor.constraint(equalTo: line.leftAnchor, constant: -12)
+      
+      NSLayoutConstraint.activate([
+        card!.topAnchor.constraint(equalTo: line.topAnchor, constant: 12),
+        cardLeft
+        ])
+    }
+  }
+  
+  /// Fade out. Animation optional.
+  private func hide(animated: Bool) {
+    let block = {
+      self.line.alpha = 0
+      self.card?.alpha = 0
+    }
+    if animated {
+      UIView.animate(withDuration: 0.12, animations: block)
+    } else {
+      UIView.performWithoutAnimation(block)
+    }
+  }
+  
+  /// Fade in. Animation optional.
+  private func show(animated: Bool) {
+    let block = {
+      self.line.alpha = 1
+      self.card?.alpha = 1
+    }
+    if animated {
+      UIView.animate(withDuration: 0.12, animations: block)
+    } else {
+      UIView.performWithoutAnimation(block)
+    }
+  }
+  
   @objc func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
     guard let _ = dataProvider else { return }
     switch gestureRecognizer.state {
+      
+    // On begin: Simply reveal the line/card and trigger impact.
     case .began:
-      self.line.alpha = 1
+      show(animated: true)
       impactGenerator.impactOccurred()
+      
+    // On changed: Find the touch location, get nearest dataPoint from dataProvider and move line to it if needed.
     case .changed:
       let currentTouchPoint = gestureRecognizer.location(in: self.superview)
       let dataPoint = dataProvider.position(nearest: currentTouchPoint)
@@ -95,16 +174,66 @@ class GraphInteractionView: UIView {
         impactGenerator.impactOccurred()
       }
       
+      updateCard()
+      
       lastPosition = dataPoint
       
       lineLeft.constant = dataPoint.x
       line.setDotPosition(dataPoint.y)
       layoutIfNeeded()
       
+    // On end: Hide line/card.
     case .cancelled, .ended, .failed:
-      self.line.alpha = 0
+      hide(animated: true)
     default:
       return
     }
   }
+  
+  private func updateCard() {
+    guard let _ = card else { return }
+    
+    if let newPlacement = recommendedCardPlacement() {
+      set(cardPlacement: newPlacement, animated: true)
+    }
+  }
+  
+  // TODO: Make this smarter?
+  /// Checks if card's frame is outside frame.
+  ///
+  /// - Returns: Recommended card placement if card is out of frame, otherwise nil.
+  private func recommendedCardPlacement() -> CardPlacement? {
+    guard let card = card else { return nil }
+    
+    if frame.contains(card.frame) {
+      return nil
+    } else if currentCardPlacement == .left {
+      return .right
+    } else {
+      return .left
+    }
+  }
+  
+  /// Sets the card's placement, either to the right or left of the line.
+  private func set(cardPlacement: CardPlacement, animated: Bool) {
+    guard let _ = cardRight, let _ = cardLeft else { return }
+    
+    switch cardPlacement {
+    case .right:
+      cardRight.isActive = false
+      cardLeft.isActive = true
+    case .left:
+      cardLeft.isActive = false
+      cardRight.isActive = true
+    }
+    
+    if animated {
+      UIView.animate(withDuration: 0.25) {
+        self.layoutIfNeeded()
+      }
+    } else {
+      UIView.performWithoutAnimation(layoutIfNeeded)
+    }
+  }
+  
 }

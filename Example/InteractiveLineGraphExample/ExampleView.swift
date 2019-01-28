@@ -12,7 +12,8 @@ class ExampleView: UIView {
   
   // MARK: - Subviews
   let graphView = InteractiveLineGraphView()
-  let textLabel = UILabel()
+  
+  let graphDetailCard = ExampleDetailCardView()
   
   // MARK: - Initialization
   convenience init() {
@@ -32,10 +33,6 @@ class ExampleView: UIView {
     graphView.dotsEnabled = false
     graphView.interactionHighlightColor = .darkGray
     graphView.interactionHighlightAlpha = 0.25
-    
-    textLabel.font = UIFont.init(name: "Avenir", size: 32)
-    textLabel.textAlignment = .center
-    textLabel.textColor = .darkGray
   }
   
   /// Set AccessibilityIdentifiers for view/subviews
@@ -47,17 +44,13 @@ class ExampleView: UIView {
   fileprivate func configureLayout() {
     
     addAutoLayoutSubview(graphView)
-    addAutoLayoutSubview(textLabel)
     
     // Activate NSLayoutAnchors within this closure
     NSLayoutConstraint.activate([
       graphView.topAnchor.constraint(equalTo: safeTopAnchor, constant: 60),
       graphView.centerXAnchor.constraint(equalTo: centerXAnchor),
       graphView.widthAnchor.constraint(equalToConstant: 375),
-      graphView.heightAnchor.constraint(equalToConstant: 250),
-      
-      textLabel.topAnchor.constraint(equalTo: graphView.bottomAnchor, constant: 24),
-      textLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+      graphView.heightAnchor.constraint(equalToConstant: 250)
       ])
   }
 }

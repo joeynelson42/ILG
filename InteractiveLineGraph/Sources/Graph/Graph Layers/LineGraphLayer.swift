@@ -9,7 +9,7 @@ import UIKit
 
 class LineGraphLayer: CAShapeLayer {
   
-  weak var dataProvider: GraphDataProvider!
+  weak var dataProvider: LineGraphDataProvider!
   
   var linePath: UIBezierPath!
   var fullPath: UIBezierPath!

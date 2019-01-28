@@ -9,6 +9,13 @@ import UIKit
 
 open class InteractiveLineGraphView: UIView {
   
+  // MARK: Data
+  weak public var dataProvider: InteractiveLineGraphDataProvider! {
+    didSet {
+      self.dataProviderDidChange()
+    }
+  }
+  
   // MARK: Interaction
   weak public var interactionDelegate: GraphViewInteractionDelegate?
   
@@ -142,17 +149,6 @@ open class InteractiveLineGraphView: UIView {
   }
   
   fileprivate let graphPadding = UIEdgeInsets.init(top: 15, left: 15, bottom: 15, right: 15)
-  
-  
-  fileprivate var dataPoints: [Double] = [] {
-    didSet {
-      graphPoints.removeAll()
-      for (index,_) in dataPoints.enumerated() {
-        graphPoints.append(CGPoint.init(x: columnXPoint(column: index), y: columnYPoint(column: index)))
-      }
-    }
-  }
-  
   fileprivate var graphPoints = [CGPoint]()
   
   // MARK: Sublayers/views
@@ -177,7 +173,6 @@ open class InteractiveLineGraphView: UIView {
     dotsLayer.dataProvider = self
     layer.addSublayer(dotsLayer)
     
-    interactionView.dataProvider = self
     addAutoLayoutSubview(interactionView)
     interactionView.fillSuperview()
   }
@@ -191,9 +186,17 @@ open class InteractiveLineGraphView: UIView {
     updateGraphFrame()
   }
   
-  // MARK: - Public  
-  public func update(withDataPoints points: [Double], animated: Bool) {
-    dataPoints = points
+  @objc func dataProviderDidChange() {
+    interactionView.dataProvider = self
+    update(animated: false)
+  }
+  
+  // MARK: - Public
+  public func update(animated: Bool) {
+    guard let _ = dataProvider else { return }
+    
+    updateGraphPoints()
+    
     graphLayer.updatePaths(animated: animated)
     
     if dotsEnabled {
@@ -208,6 +211,13 @@ open class InteractiveLineGraphView: UIView {
 
 // MARK: Private
 extension InteractiveLineGraphView {
+  fileprivate func updateGraphPoints() {
+    graphPoints.removeAll()
+    for (index,_) in dataProvider.dataPoints().enumerated() {
+      graphPoints.append(CGPoint.init(x: columnXPoint(column: index), y: columnYPoint(column: index)))
+    }
+  }
+  
   fileprivate func updateGraphFrame() {
     let insetFrameSize = CGSize.init(width: frame.size.width - (graphPadding.left * 2), height: frame.size.height - (graphPadding.left * 2))
     graphLayer.frame.size = insetFrameSize
@@ -224,23 +234,26 @@ extension InteractiveLineGraphView {
   }
 }
 
-extension InteractiveLineGraphView: GraphDataProvider {
+extension InteractiveLineGraphView: LineGraphDataProvider {
   func position(forColumn column: Int) -> CGPoint {
     return CGPoint.init(x: columnXPoint(column: column), y: columnYPoint(column: column))
   }
   
   func totalDataPoints() -> Int {
-    return dataPoints.count
+    guard let _ = dataProvider else { return 0 }
+    return dataProvider.dataPoints().count
   }
   
   fileprivate func columnYPoint(column: Int) -> CGFloat {
     let minY = frame.height - graphPadding.bottom
     
-    if dataPoints.isEmpty { return minY }
+    guard let _ = dataProvider else { return minY }
     
-    let minValue = CGFloat(dataPoints.min() ?? 0)
-    let maxValue = CGFloat(dataPoints.max() ?? 0)
-    let dataPoint = CGFloat(dataPoints[column])
+    if dataProvider.dataPoints().isEmpty { return minY }
+    
+    let minValue = CGFloat(dataProvider.dataPoints().min() ?? 0)
+    let maxValue = CGFloat(dataProvider.dataPoints().max() ?? 0)
+    let dataPoint = CGFloat(dataProvider.dataPoints()[column])
     
     if minValue + maxValue <= 0 || (maxValue - minValue == 0) {
       return minY
@@ -254,11 +267,13 @@ extension InteractiveLineGraphView: GraphDataProvider {
   }
   
   fileprivate func columnXPoint(column: Int) -> CGFloat {
-    if dataPoints.count <= 1 {
+    guard let _ = dataProvider else { return 0 }
+    
+    if dataProvider.dataPoints().count <= 1 {
       return 0
     }
     
-    let spacer = (bounds.width - (graphPadding.left + graphPadding.right)) / CGFloat((dataPoints.count - 1))
+    let spacer = (bounds.width - (graphPadding.left + graphPadding.right)) / CGFloat((dataProvider.dataPoints().count - 1))
     var x = CGFloat(column) * spacer
     x += graphPadding.left
     return x
@@ -279,8 +294,15 @@ extension InteractiveLineGraphView: InteractionDataProvider {
       }
     }
     
+    dataProvider.updateDetailCardView(atIndex: index)
     interactionDelegate?.graphViewInteraction(userInputDidChange: index)
     
     return nearest
   }
+
+  func detailCardView() -> UIView? {
+    guard let _ = dataProvider else { return nil }
+    return dataProvider.detailCardView()
+  }
+  
 }

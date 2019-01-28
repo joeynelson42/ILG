@@ -11,6 +11,7 @@ import InteractiveLineGraph
 class ExampleViewController: UIViewController {
   
   // MARK: - Properties
+  private var points = [Double]()
   
   // MARK: - View
   let baseView = ExampleView()
@@ -24,16 +25,19 @@ class ExampleViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    baseView.graphView.dataProvider = self
     baseView.graphView.interactionDelegate = self
     
     baseView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(handleTap)))
     
     baseView.layoutIfNeeded()
-    baseView.graphView.update(withDataPoints: generateRandomList(), animated: true)
+    points = generateRandomList()
+    baseView.graphView.update(animated: false)
   }
   
   @objc func handleTap() {
-    baseView.graphView.update(withDataPoints: generateRandomList(), animated: true)
+    points = generateRandomList()
+    baseView.graphView.update(animated: true)
   }
   
   fileprivate func generateRandomList() -> [Double] {
@@ -45,8 +49,22 @@ class ExampleViewController: UIViewController {
   }
 }
 
+extension ExampleViewController: InteractiveLineGraphDataProvider {
+  func detailCardView() -> UIView? {
+    return baseView.graphDetailCard
+  }
+  
+  func updateDetailCardView(atIndex index: Int) {
+    baseView.graphDetailCard.textLabel.text = "Index #\(index)"
+  }
+  
+  func dataPoints() -> [Double] {
+    return points
+  }
+}
+
 extension ExampleViewController: GraphViewInteractionDelegate {
   func graphViewInteraction(userInputDidChange currentIndex: Int) {
-    baseView.textLabel.text = "\(currentIndex)"
+    print("Index #\(index)")
   }
 }

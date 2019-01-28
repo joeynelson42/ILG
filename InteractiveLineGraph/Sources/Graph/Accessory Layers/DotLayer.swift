@@ -9,7 +9,7 @@ import UIKit
 
 final class DotLayer: CAShapeLayer {
   
-  weak var dataProvider: GraphDataProvider!
+  weak var dataProvider: LineGraphDataProvider!
   private var dotLayers = [CAShapeLayer]()
   
   func drawDots() {
