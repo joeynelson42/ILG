@@ -46,7 +46,8 @@ open class InteractiveLineGraphView: UIView {
   }
   
   // MARK: Line Attributes
-  public var isLineZeroBased: Bool = false
+  public var lineMinY: CGFloat?
+  public var lineMaxY: CGFloat?
   
   public var lineColor: UIColor {
     get {
@@ -165,7 +166,7 @@ open class InteractiveLineGraphView: UIView {
     }
   }
   
-  fileprivate let graphPadding = UIEdgeInsets.init(top: 15, left: 15, bottom: 15, right: 15)
+  fileprivate let graphPadding = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)
   fileprivate var graphPoints = [CGPoint]()
   
   // MARK: Sublayers/views
@@ -259,8 +260,11 @@ extension InteractiveLineGraphView: LineGraphDataProvider {
     
     if dataPoints.isEmpty { return minY }
     
-    let minValue = isLineZeroBased ? 0 : CGFloat(dataPoints.min() ?? 0)
-    let maxValue = CGFloat(dataPoints.max() ?? 0)
+    let minDataPoint = CGFloat(dataPoints.min() ?? 0)
+    let maxDataPoint = CGFloat(dataPoints.max() ?? 0)
+    
+    let minValue = lineMinY ?? minDataPoint
+    let maxValue = lineMaxY ?? maxDataPoint
     let dataPoint = CGFloat(dataPoints[column])
     
     if minValue + maxValue <= 0 || (maxValue - minValue == 0) {
