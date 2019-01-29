@@ -165,30 +165,19 @@ class GraphInteractionView: UIView {
   
   @objc func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
     guard let _ = dataProvider else { return }
+    let currentTouchPoint = gestureRecognizer.location(in: self.superview)
+    
     switch gestureRecognizer.state {
-      
     // On begin: Simply reveal the echo/card and trigger impact.
     case .began:
       show(animated: true)
       impactGenerator.impactOccurred()
+      update(withTouchPoint: currentTouchPoint, animated: false)
       
     // On changed: Find the touch location, get nearest dataPoint from dataProvider and move echo to it if needed.
     case .changed:
       let currentTouchPoint = gestureRecognizer.location(in: self.superview)
-      let dataPoint = dataProvider.position(nearest: currentTouchPoint)
-      
-      if let last = lastPosition, last != dataPoint {
-        impactGenerator.impactOccurred()
-        updateEcho(withDataPoint: dataPoint)
-      }
-      lastPosition = dataPoint
-      
-      updateCard(withDataPoint: dataPoint)
-      updateGhostLine(withTouchPoint: currentTouchPoint)
-      
-      UIView.animate(withDuration: 0.25) {
-        self.layoutIfNeeded()
-      }
+      update(withTouchPoint: currentTouchPoint, animated: true)
       
     // On end: Hide echo/card.
     case .cancelled, .ended, .failed:
@@ -202,6 +191,27 @@ class GraphInteractionView: UIView {
 
 // MARK: Update methods
 extension GraphInteractionView {
+  fileprivate func update(withTouchPoint touchPoint: CGPoint, animated: Bool) {
+    let dataPoint = dataProvider.position(nearest: touchPoint)
+    
+    if let last = lastPosition, last != dataPoint {
+      impactGenerator.impactOccurred()
+      updateEcho(withDataPoint: dataPoint)
+    }
+    lastPosition = dataPoint
+    
+    updateCard(withDataPoint: dataPoint)
+    updateGhostLine(withTouchPoint: touchPoint)
+    
+    if animated {
+      UIView.animate(withDuration: 0.25) {
+        self.layoutIfNeeded()
+      }
+    } else {
+      UIView.performWithoutAnimation(layoutIfNeeded)
+    }
+  }
+  
   fileprivate func updateGhostLine(withTouchPoint point: CGPoint) {
     ghostLineLeft.constant = point.x
   }

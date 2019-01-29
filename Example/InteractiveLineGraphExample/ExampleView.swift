@@ -27,8 +27,6 @@ class ExampleView: UIView {
   fileprivate func configureSubviews() {
     backgroundColor = .white
     
-    graphView.layer.borderColor = UIColor.black.cgColor
-    graphView.layer.borderWidth = 1
     graphView.lineWidth = 2
     graphView.lineColor = .red
     graphView.lineMinY = 0
