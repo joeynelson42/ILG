@@ -9,12 +9,7 @@ import UIKit
 
 open class InteractiveLineGraphView: UIView {
   
-  // MARK: Data
-  var dataPoints = [Double]() {
-    didSet {
-      updateGraphPoints()
-    }
-  }
+  // MARK: Public Properties
   
   // MARK: Interaction
   weak public var interactionDelegate: GraphViewInteractionDelegate?
@@ -51,6 +46,8 @@ open class InteractiveLineGraphView: UIView {
   }
   
   // MARK: Line Attributes
+  public var isLineZeroBased: Bool = false
+  
   public var lineColor: UIColor {
     get {
       if let color = graphLayer.strokeColor {
@@ -159,6 +156,15 @@ open class InteractiveLineGraphView: UIView {
     }
   }
   
+  // MARK: Private Properties
+  
+  // MARK: Data
+  fileprivate var dataPoints = [Double]() {
+    didSet {
+      updateGraphPoints()
+    }
+  }
+  
   fileprivate let graphPadding = UIEdgeInsets.init(top: 15, left: 15, bottom: 15, right: 15)
   fileprivate var graphPoints = [CGPoint]()
   
@@ -168,7 +174,7 @@ open class InteractiveLineGraphView: UIView {
   fileprivate var dotsLayer = DotLayer()
   fileprivate var interactionView = GraphInteractionView()
   
-  // MARK: - Life Cycle
+  // MARK: - Initializers
   convenience init() {
     self.init(frame: .zero)
   }
@@ -198,7 +204,7 @@ open class InteractiveLineGraphView: UIView {
     updateGraphFrame()
   }
   
-  // MARK: - Public
+  // MARK: - Public Methods
   public func update(withDataPoints dataPoints: [Double], animated: Bool) {
     self.dataPoints = dataPoints
     
@@ -214,7 +220,7 @@ open class InteractiveLineGraphView: UIView {
   }
 }
 
-// MARK: Private
+// MARK: Private Methods
 extension InteractiveLineGraphView {
   fileprivate func updateGraphPoints() {
     graphPoints.removeAll()
@@ -235,7 +241,7 @@ extension InteractiveLineGraphView {
   
   fileprivate func drawDots() {
     dotsLayer.frame = bounds
-    dotsLayer.drawDots()
+    dotsLayer.update()
   }
 }
 
@@ -253,7 +259,7 @@ extension InteractiveLineGraphView: LineGraphDataProvider {
     
     if dataPoints.isEmpty { return minY }
     
-    let minValue = CGFloat(dataPoints.min() ?? 0)
+    let minValue = isLineZeroBased ? 0 : CGFloat(dataPoints.min() ?? 0)
     let maxValue = CGFloat(dataPoints.max() ?? 0)
     let dataPoint = CGFloat(dataPoints[column])
     
@@ -270,7 +276,7 @@ extension InteractiveLineGraphView: LineGraphDataProvider {
   
   fileprivate func columnXPoint(column: Int) -> CGFloat {
     if dataPoints.count <= 1 {
-      return 0
+      return graphPadding.left
     }
     
     let spacer = (bounds.width - (graphPadding.left + graphPadding.right)) / CGFloat((dataPoints.count - 1))

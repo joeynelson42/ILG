@@ -16,12 +16,7 @@ class ExampleDetailCardView: UIView {
   let textLabel = UILabel()
   let circleView = UIView()
   
-  // MARK: - Stored Constraints
-  // (Store any constraints that might need to be changed or animated later)
-  
-  
   // MARK: - Initialization
-  
   convenience init() {
     self.init(frame: .zero)
     configureSubviews()
@@ -43,7 +38,7 @@ class ExampleDetailCardView: UIView {
     textLabel.text = "TEST"
     
     circleView.layer.cornerRadius = circleSize / 2
-    circleView.backgroundColor = .purple
+    circleView.backgroundColor = .black
   }
   
   /// Set AccessibilityIdentifiers for view/subviews

@@ -41,7 +41,7 @@ class ExampleViewController: UIViewController {
   
   fileprivate func generateRandomList() -> [Double] {
     var list = [Double]()
-    for _ in 0 ..< 12 {
+    for _ in 0 ..< Int.random(in: 12...20) {
       list.append(Double.random(in: 0...50))
     }
     return list

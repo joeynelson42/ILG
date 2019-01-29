@@ -29,8 +29,11 @@ class ExampleView: UIView {
     
     graphView.lineWidth = 2
     graphView.lineColor = .red
+    graphView.isLineZeroBased = true
     graphView.gridEnabled = false
-    graphView.dotsEnabled = false
+    graphView.dotsEnabled = true
+    graphView.dotColor = .blue
+    graphView.dotSize = 5
     graphView.interactionHighlightColor = .darkGray
     graphView.interactionHighlightAlpha = 0.25
     graphView.interactionDetailCard = graphDetailCard
