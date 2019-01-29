@@ -19,7 +19,7 @@ class GraphInteractionView: UIView {
     
     set {
       echo.highlightColor = newValue.withAlphaComponent(highlightAlpha)
-      ghostLine.backgroundColor = newValue.withAlphaComponent(0.1)
+      ghostLine.backgroundColor = newValue.withAlphaComponent(0.25)
     }
   }
   
@@ -172,6 +172,8 @@ class GraphInteractionView: UIView {
     case .began:
       show(animated: true)
       impactGenerator.impactOccurred()
+      
+      lastPosition = currentTouchPoint
       update(withTouchPoint: currentTouchPoint, animated: false)
       
     // On changed: Find the touch location, get nearest dataPoint from dataProvider and move echo to it if needed.
