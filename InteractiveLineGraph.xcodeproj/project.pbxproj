@@ -11,7 +11,7 @@
 		F1E13C2721F8F5CD009FEB26 /* InteractiveLineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C1D21F8F5CD009FEB26 /* InteractiveLineGraphView.swift */; };
 		F1E13C2821F8F5CD009FEB26 /* GridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C1F21F8F5CD009FEB26 /* GridLayer.swift */; };
 		F1E13C2921F8F5CD009FEB26 /* DotLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2021F8F5CD009FEB26 /* DotLayer.swift */; };
-		F1E13C2A21F8F5CD009FEB26 /* InteractionLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2221F8F5CD009FEB26 /* InteractionLineView.swift */; };
+		F1E13C2A21F8F5CD009FEB26 /* InteractionEchoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2221F8F5CD009FEB26 /* InteractionEchoView.swift */; };
 		F1E13C2B21F8F5CD009FEB26 /* GraphInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2321F8F5CD009FEB26 /* GraphInteractionView.swift */; };
 		F1E13C2C21F8F5CD009FEB26 /* DataProviders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2521F8F5CD009FEB26 /* DataProviders.swift */; };
 		F1E13C3021F8F669009FEB26 /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E13C2E21F8F669009FEB26 /* Collection+.swift */; };
@@ -27,7 +27,7 @@
 		F1E13C1D21F8F5CD009FEB26 /* InteractiveLineGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveLineGraphView.swift; sourceTree = "<group>"; };
 		F1E13C1F21F8F5CD009FEB26 /* GridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridLayer.swift; sourceTree = "<group>"; };
 		F1E13C2021F8F5CD009FEB26 /* DotLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DotLayer.swift; sourceTree = "<group>"; };
-		F1E13C2221F8F5CD009FEB26 /* InteractionLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionLineView.swift; sourceTree = "<group>"; };
+		F1E13C2221F8F5CD009FEB26 /* InteractionEchoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionEchoView.swift; sourceTree = "<group>"; };
 		F1E13C2321F8F5CD009FEB26 /* GraphInteractionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphInteractionView.swift; sourceTree = "<group>"; };
 		F1E13C2521F8F5CD009FEB26 /* DataProviders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProviders.swift; sourceTree = "<group>"; };
 		F1E13C2E21F8F669009FEB26 /* Collection+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+.swift"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				F1E13C2321F8F5CD009FEB26 /* GraphInteractionView.swift */,
-				F1E13C2221F8F5CD009FEB26 /* InteractionLineView.swift */,
+				F1E13C2221F8F5CD009FEB26 /* InteractionEchoView.swift */,
 			);
 			path = Interaction;
 			sourceTree = "<group>";
@@ -221,7 +221,7 @@
 				F1E13C2921F8F5CD009FEB26 /* DotLayer.swift in Sources */,
 				F1E13C2B21F8F5CD009FEB26 /* GraphInteractionView.swift in Sources */,
 				F1E13C3021F8F669009FEB26 /* Collection+.swift in Sources */,
-				F1E13C2A21F8F5CD009FEB26 /* InteractionLineView.swift in Sources */,
+				F1E13C2A21F8F5CD009FEB26 /* InteractionEchoView.swift in Sources */,
 				F1E13C2821F8F5CD009FEB26 /* GridLayer.swift in Sources */,
 				F1E13C3121F8F669009FEB26 /* UIView+.swift in Sources */,
 				F1E13C2721F8F5CD009FEB26 /* InteractiveLineGraphView.swift in Sources */,

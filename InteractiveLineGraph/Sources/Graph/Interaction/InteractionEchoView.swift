@@ -1,5 +1,5 @@
 //
-//  InteractionLineView.swift
+//  InteractionEchoView.swift
 //  InteractiveLineGraph
 //
 //  Created by Joey Nelson on 1/17/19.
@@ -7,16 +7,26 @@
 
 import UIKit
 
-class InteractionLineView: UIView {
+class InteractionEchoView: UIView {
   
   // MARK: - Properties
   fileprivate var isAnimating: Bool = false
   fileprivate var animator: UIViewPropertyAnimator!
   
-  // MARK: - Subviews
-  fileprivate let line = UIView()
-  fileprivate let dot = UIView()
+  var highlightColor: UIColor {
+    get {
+      return dot.backgroundColor ?? .clear
+    }
+    
+    set {
+      dot.backgroundColor = newValue
+      echo.layer.borderColor = newValue.cgColor
+      echo.backgroundColor = newValue
+    }
+  }
   
+  // MARK: - Subviews
+  fileprivate let dot = UIView()
   fileprivate var echo = UIView()
   
   // MARK: - Stored Constraints
@@ -56,7 +66,6 @@ class InteractionLineView: UIView {
   /// Add subviews, set layoutMargins, initialize stored constraints, set layout priorities, activate constraints
   fileprivate func configureLayout() {
     
-    addAutoLayoutSubview(line)
     addAutoLayoutSubview(echo)
     addAutoLayoutSubview(dot)
     
@@ -64,11 +73,6 @@ class InteractionLineView: UIView {
     
     // Activate NSLayoutAnchors within this closure
     NSLayoutConstraint.activate([
-      line.topAnchor.constraint(equalTo: topAnchor),
-      line.bottomAnchor.constraint(equalTo: bottomAnchor),
-      line.centerXAnchor.constraint(equalTo: centerXAnchor),
-      line.widthAnchor.constraint(equalToConstant: 1.5),
-      
       dot.centerXAnchor.constraint(equalTo: centerXAnchor),
       dot.widthAnchor.constraint(equalToConstant: 5),
       dot.heightAnchor.constraint(equalToConstant: 5),
@@ -81,24 +85,9 @@ class InteractionLineView: UIView {
       ])
   }
   
-  override var backgroundColor: UIColor? {
-    didSet {
-      line.backgroundColor = backgroundColor
-      dot.backgroundColor = backgroundColor
-      echo.layer.borderColor = backgroundColor?.cgColor
-      echo.backgroundColor = backgroundColor
-    }
-  }
-  
   public func setDotPosition(_ yPos: CGFloat) {
-//    if animator.isRunning {
-//      animator.stopAnimation(true)
-//      animator.finishAnimation(at: .end)
-//    }
-    
     dotCenterY.constant = yPos
     layoutIfNeeded()
-    
     animator.startAnimation()
   }
   
