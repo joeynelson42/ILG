@@ -10,7 +10,6 @@ import UIKit
 class InteractionEchoView: UIView {
   
   // MARK: - Properties
-  fileprivate var isAnimating: Bool = false
   fileprivate var animator: UIViewPropertyAnimator!
   
   var highlightColor: UIColor {
@@ -88,7 +87,9 @@ class InteractionEchoView: UIView {
   public func setDotPosition(_ yPos: CGFloat) {
     dotCenterY.constant = yPos
     layoutIfNeeded()
-    animator.startAnimation()
+    
+    if !animator.isRunning {
+      animator.startAnimation()
+    }
   }
-  
 }

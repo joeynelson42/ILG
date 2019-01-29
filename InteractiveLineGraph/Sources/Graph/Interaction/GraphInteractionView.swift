@@ -7,19 +7,6 @@
 
 import UIKit
 
-enum CardPlacement {
-  case right, left
-  
-  var opposite: CardPlacement {
-    switch self {
-    case .left:
-      return .right
-    case .right:
-      return .left
-    }
-  }
-}
-
 class GraphInteractionView: UIView {
   
   // MARK: - Public Properties
@@ -63,15 +50,14 @@ class GraphInteractionView: UIView {
   // MARK: - Subviews
   fileprivate let echo = InteractionEchoView()
   fileprivate var detailCard: UIView?
-  
+  fileprivate var guideLine = UIView()
   fileprivate let ghostLine = UIView()
   
   // MARK: - Stored Constraints
   // (Store any constraints that might need to be changed or animated later)
   fileprivate var echoLeft: NSLayoutConstraint!
-  
   fileprivate var ghostLineLeft: NSLayoutConstraint!
-  
+  fileprivate var guideLineLeft: NSLayoutConstraint!
   fileprivate var cardLeft: NSLayoutConstraint!
   fileprivate var cardRight: NSLayoutConstraint!
   fileprivate var cardCenterY: NSLayoutConstraint!
@@ -104,16 +90,22 @@ class GraphInteractionView: UIView {
     
     addAutoLayoutSubview(echo)
     addAutoLayoutSubview(ghostLine)
+    addAutoLayoutSubview(guideLine)
     
     echoLeft = echo.centerXAnchor.constraint(equalTo: leftAnchor)
-    
     ghostLineLeft = ghostLine.centerXAnchor.constraint(equalTo: leftAnchor)
+    guideLineLeft = guideLine.centerXAnchor.constraint(equalTo: leftAnchor)
     
     NSLayoutConstraint.activate([
       echo.topAnchor.constraint(equalTo: topAnchor),
       echo.bottomAnchor.constraint(equalTo: bottomAnchor),
       echo.widthAnchor.constraint(equalToConstant: 1.5),
       echoLeft,
+      
+      guideLine.topAnchor.constraint(equalTo: topAnchor),
+      guideLine.bottomAnchor.constraint(equalTo: bottomAnchor),
+      guideLine.widthAnchor.constraint(equalToConstant: 1.5),
+      guideLineLeft,
       
       ghostLine.topAnchor.constraint(equalTo: topAnchor),
       ghostLine.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -133,8 +125,8 @@ class GraphInteractionView: UIView {
       
       addAutoLayoutSubview(detailCard!)
       
-      cardLeft = detailCard!.leftAnchor.constraint(equalTo: echo.rightAnchor, constant: 12)
-      cardRight = detailCard!.rightAnchor.constraint(equalTo: echo.leftAnchor, constant: -12)
+      cardLeft = detailCard!.leftAnchor.constraint(equalTo: guideLine.rightAnchor, constant: 12)
+      cardRight = detailCard!.rightAnchor.constraint(equalTo: guideLine.leftAnchor, constant: -12)
       cardCenterY = detailCard!.centerYAnchor.constraint(equalTo: topAnchor)
     
       NSLayoutConstraint.activate([
@@ -187,16 +179,16 @@ class GraphInteractionView: UIView {
       
       if let last = lastPosition, last != dataPoint {
         impactGenerator.impactOccurred()
+        updateEcho(withDataPoint: dataPoint)
       }
-      
-      updateCard(withDataPoint: dataPoint)
-      
       lastPosition = dataPoint
       
-      ghostLineLeft.constant = currentTouchPoint.x
-      echoLeft.constant = dataPoint.x
-      echo.setDotPosition(dataPoint.y)
-      layoutIfNeeded()
+      updateCard(withDataPoint: dataPoint)
+      updateGhostLine(withTouchPoint: currentTouchPoint)
+      
+      UIView.animate(withDuration: 0.25) {
+        self.layoutIfNeeded()
+      }
       
     // On end: Hide echo/card.
     case .cancelled, .ended, .failed:
@@ -206,23 +198,51 @@ class GraphInteractionView: UIView {
     }
   }
   
-  private func updateCard(withDataPoint point: CGPoint) {
+}
+
+// MARK: Update methods
+extension GraphInteractionView {
+  fileprivate func updateGhostLine(withTouchPoint point: CGPoint) {
+    ghostLineLeft.constant = point.x
+  }
+  
+  fileprivate func updateEcho(withDataPoint point: CGPoint) {
+    echoLeft.constant = point.x
+    echo.setDotPosition(point.y)
+    UIView.performWithoutAnimation(layoutIfNeeded)
+  }
+  
+  fileprivate func updateCard(withDataPoint point: CGPoint) {
     guard let _ = detailCard else { return }
-    
+    guideLineLeft.constant = point.x
     cardCenterY.constant = point.y
-    UIView.animate(withDuration: 0.25) {
-      self.layoutIfNeeded()
-    }
     
     if let newPlacement = recommendedCardPlacement() {
       set(cardPlacement: newPlacement, animated: true)
     }
   }
+}
+
+// MARK: Card Placement
+
+fileprivate enum CardPlacement {
+  case right, left
   
+  var opposite: CardPlacement {
+    switch self {
+    case .left:
+      return .right
+    case .right:
+      return .left
+    }
+  }
+}
+
+extension GraphInteractionView {
   /// Checks if card's frame is outside frame, returns new placement if needed.
   ///
   /// - Returns: Recommended card placement if card is out of frame, otherwise nil.
-  private func recommendedCardPlacement() -> CardPlacement? {
+  fileprivate func recommendedCardPlacement() -> CardPlacement? {
     guard let card = detailCard else { return nil }
     
     var extremity: CGPoint!
@@ -241,7 +261,7 @@ class GraphInteractionView: UIView {
   }
   
   /// Sets the card's placement, either to the right or left of the echo.
-  private func set(cardPlacement: CardPlacement, animated: Bool) {
+  fileprivate func set(cardPlacement: CardPlacement, animated: Bool) {
     guard let _ = cardRight, let _ = cardLeft else { return }
     
     switch cardPlacement {
@@ -261,5 +281,4 @@ class GraphInteractionView: UIView {
       UIView.performWithoutAnimation(layoutIfNeeded)
     }
   }
-  
 }
