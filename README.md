@@ -8,7 +8,7 @@
 ## Disclaimer
 I built this for work and while it meets my job's requirements, many areas haven't been fleshed out. I like to think that I'll get back to it but I am very good at putting things on my get-back-to-it shelf. 
 
-Things to be aware of (or fix/add if you're feeling communal!):
+Things to be aware of (or fix/add if you're feeling communal):
  - Not sure where the grid is at, probably still works?
  - There was a gradient beneath the line at one point but it broke and I haven't bothered to fix it.
  - Line and dot animations leave something to be desired.
