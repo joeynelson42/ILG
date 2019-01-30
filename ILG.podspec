@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 s.name         = "ILG"
 
-s.version      = "0.1.6"
+s.version      = "1.0.0"
 
 s.summary      = "A simplified line graph with Robinhood-esque interaction. Because there aren't enough iOS graph libraries on Github."
 
