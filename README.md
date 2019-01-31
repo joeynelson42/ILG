@@ -1,4 +1,4 @@
-# ILG (InteractiveLineGraph) 🤘📈
+# ILG (InteractiveLineGraph) 📈
 > I was tasked with building something akin to Robinhood's graph and while there are several thousand iOS chart frameworks I decided it would be more fun to roll my own and less tedious than modifying someone else's.
 > I tried my best to keep it simple, while still allowing for enough customization for it to remain potentially useful for others.
 
@@ -15,8 +15,9 @@ Things to be aware of (or fix/add if you're feeling communal):
 
  
 Things I do plan on working on:
- - GraphViewInteractionDelegate could be a more helpful.
+ - GraphViewInteractionDelegate could be fancier/a little more helpful.
  - Naming and other general housekeeping.
+ - Documentation.
  - Testing!
  
 
@@ -56,7 +57,7 @@ There are a number of public properties you'll find in `InteractiveLineGraphView
 
 `lineMinY` and `lineMaxY` will force set the lower and upper y-axis limits, if nil then the `.min()` or `.max()` of your data will be used.
 
-`interactionDetailCard` is the floating card. It's entirely optional. If you do use it be sure to keep a reference to your card so you can update it via the `GraphViewInteractionDelegate` callback (maybe in the future I'll have fancier protocols).
+`interactionDetailCard` is the floating card. It's entirely optional, simply assign it any UIView and it will do the rest. If you do use it and would like to update it be sure to keep a reference to your card so you can update it in the `GraphViewInteractionDelegate` callback (maybe in the future I'll have fancier protocols).
 
 ### Protocols
 `GraphViewInteractionDelegate` will relay all interaction information back to you. And when I say "all" I mean it will just tell you when the highlighted index has changed. Spicing it up a little wouldn't be hard, and I would like to in the future but for now it is what it is.
