@@ -52,4 +52,12 @@ extension ExampleViewController: GraphViewInteractionDelegate {
   func graphViewInteraction(userInputDidChange currentIndex: Int, graphView: InteractiveLineGraphView, detailCardView: UIView?) {
     baseView.graphDetailCard.textLabel.text = "Index #\(currentIndex)"
   }
+
+  func graphViewInteraction(userInputDidBeginOn graphView: InteractiveLineGraphView, detailCardView: UIView?) {
+    print("Began interaction")
+  }
+  
+  func graphViewInteraction(userInputDidEndOn graphView: InteractiveLineGraphView, detailCardView: UIView?) {
+    print("Ended interaction")
+  }
 }

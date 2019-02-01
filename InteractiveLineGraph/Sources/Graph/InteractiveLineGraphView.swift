@@ -309,4 +309,11 @@ extension InteractiveLineGraphView: InteractionDataProvider {
     return nearest
   }
   
+  func interactionDidBegin() {
+    interactionDelegate?.graphViewInteraction(userInputDidBeginOn: self, detailCardView: interactionDetailCard)
+  }
+  
+  func interactionDidEnd() {
+    interactionDelegate?.graphViewInteraction(userInputDidEndOn: self, detailCardView: interactionDetailCard)
+  }
 }

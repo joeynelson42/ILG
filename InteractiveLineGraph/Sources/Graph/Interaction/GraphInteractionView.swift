@@ -172,9 +172,11 @@ class GraphInteractionView: UIView {
     case .began:
       show(animated: true)
       impactGenerator.impactOccurred()
-      
+
       lastPosition = currentTouchPoint
       update(withTouchPoint: currentTouchPoint, animated: false)
+      
+      dataProvider.interactionDidBegin()
       
     // On changed: Find the touch location, get nearest dataPoint from dataProvider and move echo to it if needed.
     case .changed:
@@ -184,6 +186,7 @@ class GraphInteractionView: UIView {
     // On end: Hide echo/card.
     case .cancelled, .ended, .failed:
       hide(animated: true)
+      dataProvider.interactionDidEnd()
     default:
       return
     }
