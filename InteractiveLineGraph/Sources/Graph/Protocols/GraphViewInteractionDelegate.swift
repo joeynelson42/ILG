@@ -5,12 +5,12 @@
 //  Created by Joey Nelson on 1/23/19.
 //
 
-import Foundation
+import UIKit
 
 public protocol GraphViewInteractionDelegate:class {
-  func graphViewInteraction(userInputDidChange currentIndex: Int)
+  func graphViewInteraction(userInputDidChange currentIndex: Int, graphView: InteractiveLineGraphView, detailCardView: UIView?)
 }
 
 public extension GraphViewInteractionDelegate {
-  func graphViewInteraction(userInputDidChange currentIndex: Int) {}
+  func graphViewInteraction(userInputDidChange currentIndex: Int, graphView: InteractiveLineGraphView, detailCardView: UIView?) {}
 }

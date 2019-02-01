@@ -49,7 +49,7 @@ class ExampleViewController: UIViewController {
 }
 
 extension ExampleViewController: GraphViewInteractionDelegate {
-  func graphViewInteraction(userInputDidChange currentIndex: Int) {
+  func graphViewInteraction(userInputDidChange currentIndex: Int, graphView: InteractiveLineGraphView, detailCardView: UIView?) {
     baseView.graphDetailCard.textLabel.text = "Index #\(currentIndex)"
   }
 }

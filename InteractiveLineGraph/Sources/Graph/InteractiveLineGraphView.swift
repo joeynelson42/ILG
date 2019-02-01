@@ -304,7 +304,7 @@ extension InteractiveLineGraphView: InteractionDataProvider {
       }
     }
     
-    interactionDelegate?.graphViewInteraction(userInputDidChange: index)
+    interactionDelegate?.graphViewInteraction(userInputDidChange: index, graphView: self, detailCardView: interactionDetailCard)
     
     return nearest
   }
